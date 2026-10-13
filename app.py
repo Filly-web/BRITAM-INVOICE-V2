@@ -33,10 +33,28 @@ def process():
         qr=os.path.join(QRCODE_FOLDER,f'{code}.png'); qrcode.make(link).save(qr)
         doc=Document(src); inserted=False
         for p in doc.paragraphs:
-            if '<<EFD_SECTION>>' in p.text:
-                p.text=''; p.add_run('Verification Code: '+code); p.add_run('
-'); p.add_run('Verification Link: '+link); p.add_run('
-'); p.add_run().add_picture(qr,width=Inches(0.6)); inserted=True; break
+
+    if '<<EFD_SECTION>>' in p.text:
+
+        p.text = ''
+
+        p.add_run('Verification Code: ' + code)
+
+        p.add_run('\n')
+
+        p.add_run(
+            'Verification Link: ' + verification_link
+        )
+
+        p.add_run('\n')
+
+        p.add_run().add_picture(
+            qr_file,
+            width=Inches(0.6)
+        )
+
+        inserted = True
+        break
         if not inserted:
             doc.add_paragraph('Verification Code: '+code); doc.add_paragraph('Verification Link: '+link); doc.add_picture(qr,width=Inches(0.6))
         out=os.path.join(OUTPUT_FOLDER,'PROCESSED_'+invoice.filename); doc.save(out)
